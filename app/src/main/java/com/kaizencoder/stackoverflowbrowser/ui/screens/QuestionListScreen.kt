@@ -1,5 +1,6 @@
 package com.kaizencoder.stackoverflowbrowser.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import com.kaizencoder.stackoverflowbrowser.ui.QuestionListViewModel
 
 @Composable
 fun QuestionListScreen(
+    onNavigateToDetailScreen: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: QuestionListViewModel = hiltViewModel()
 ) {
@@ -29,17 +31,23 @@ fun QuestionListScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(questions.value) { question ->
-            QuestionItem(question)
+            QuestionItem(question){ questionId ->
+               onNavigateToDetailScreen(questionId)
+            }
         }
     }
 
 }
 
 @Composable
-fun QuestionItem(question: Question, modifier: Modifier = Modifier) {
+fun QuestionItem(question: Question, onItemClick : (Int) -> Unit) {
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier
+            .clickable{
+                onItemClick(question.question_id)
+            }
     ) {
         Text(text = question.title)
         Text(text = question.owner.display_name)
@@ -50,6 +58,6 @@ fun QuestionItem(question: Question, modifier: Modifier = Modifier) {
 @Composable
 private fun QuestionItemPreview() {
     val owner = Owner("Test Coder", "")
-    QuestionItem(Question(owner, 1, "This is a test question"))
+    QuestionItem(Question(owner, 1, "This is a test question")){}
 
 }
