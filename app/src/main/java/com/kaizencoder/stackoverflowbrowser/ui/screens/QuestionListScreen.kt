@@ -1,7 +1,10 @@
 package com.kaizencoder.stackoverflowbrowser.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
@@ -9,7 +12,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,6 +24,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.kaizencoder.stackoverflowbrowser.model.Owner
 import com.kaizencoder.stackoverflowbrowser.model.Question
 import com.kaizencoder.stackoverflowbrowser.ui.QuestionListViewModel
+import com.kaizencoder.stackoverflowbrowser.utils.DateFormatter
 
 
 @Composable
@@ -31,10 +39,10 @@ fun QuestionListScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(questions.itemCount){ index ->
+        items(questions.itemCount) { index ->
 
-            questions[index]?.let {
-                QuestionItem(it) { questionId ->
+            questions[index]?.let { question ->
+                QuestionItem(question) { questionId ->
                     onNavigateToDetailScreen(questionId)
                 }
             }
@@ -59,8 +67,34 @@ fun QuestionItem(question: Question, onItemClick: (Int) -> Unit) {
             text = question.title,
             modifier = Modifier.padding(top = 12.dp, start = 12.dp)
         )
-        Text(text = question.owner.display_name,
-            modifier = Modifier.padding(top = 8.dp, start = 12.dp, bottom = 12.dp))
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp, end = 12.dp, bottom = 12.dp),
+            horizontalAlignment = Alignment.End
+        ) {
+            question.creation_date?.let { date ->
+                val annotatedString = buildAnnotatedString {
+                    append("asked on ")
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary)){
+                        append(DateFormatter.convertTimestampToFormattedDate(
+                            date
+                        ))
+                    }
+                }
+                Text(
+                    text = annotatedString
+                    )
+            }
+            val ownerName = buildAnnotatedString {
+                append(" by ")
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.secondary)) {
+                    append(question.owner.display_name)
+                }
+            }
+            Text(text = ownerName)
+        }
+
 
     }
 

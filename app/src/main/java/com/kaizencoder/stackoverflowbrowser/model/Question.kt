@@ -8,7 +8,8 @@ data class Question(
     val answer_count: Int = 0,
     val is_answered: Boolean = false,
     val link: String = "",
-    val view_count: Int = 0
+    val view_count: Int = 0,
+    val creation_date: Int? = 0,
 )
 
 data class Owner(
