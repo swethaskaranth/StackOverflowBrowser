@@ -17,6 +17,8 @@ hiltNavigationCompose = "1.2.0"
 moshiKotlin = "1.15.0"
 nav_version = "2.9.1"
 serialization = "1.9.23"
+paging_version = "3.3.6"
+paging_compose_version = "3.4.0-alpha01"
 
 
 [libraries]
@@ -43,6 +45,8 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines"}
 kotlin-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines"}
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "nav_version"}
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging_version"}
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_compose_version"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

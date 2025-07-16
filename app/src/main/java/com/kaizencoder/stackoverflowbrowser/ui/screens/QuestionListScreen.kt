@@ -3,9 +3,14 @@ package com.kaizencoder.stackoverflowbrowser.ui.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,13 +31,12 @@ fun QuestionListScreen(
 ) {
     val questions = viewModel.questions.collectAsState()
     LazyColumn(
-        modifier
-            .padding(12.dp),
+        modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(questions.value) { question ->
-            QuestionItem(question){ questionId ->
-               onNavigateToDetailScreen(questionId)
+            QuestionItem(question) { questionId ->
+                onNavigateToDetailScreen(questionId)
             }
         }
     }
@@ -40,24 +44,37 @@ fun QuestionListScreen(
 }
 
 @Composable
-fun QuestionItem(question: Question, onItemClick : (Int) -> Unit) {
-    Column(
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.Start,
+fun QuestionItem(question: Question, onItemClick: (Int) -> Unit) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        shape = MaterialTheme.shapes.extraSmall,
+        onClick = {
+            onItemClick(question.question_id)
+        },
         modifier = Modifier
-            .clickable{
-                onItemClick(question.question_id)
-            }
+            .fillMaxSize()
+            .padding(horizontal = 12.dp)
     ) {
-        Text(text = question.title)
-        Text(text = question.owner.display_name)
+        Text(
+            text = question.title,
+            modifier = Modifier.padding(top = 12.dp, start = 12.dp)
+        )
+        Text(text = question.owner.display_name,
+            modifier = Modifier.padding(top = 8.dp, start = 12.dp))
+
     }
+
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun QuestionItemPreview() {
     val owner = Owner("Test Coder", "")
-    QuestionItem(Question(owner, 1, "This is a test question")){}
+
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        items(15) {
+            QuestionItem(Question(owner, 1, "This is a test question")) {}
+        }
+    }
 
 }
