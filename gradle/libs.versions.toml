@@ -46,7 +46,7 @@ kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutine
 kotlin-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines"}
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "nav_version"}
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging_version"}
-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_compose_version"}
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging_version"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
