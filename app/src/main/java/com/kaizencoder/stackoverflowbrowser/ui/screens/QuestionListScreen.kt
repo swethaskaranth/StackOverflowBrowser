@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -21,33 +25,45 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.kaizencoder.stackoverflowbrowser.R
 import com.kaizencoder.stackoverflowbrowser.model.Owner
 import com.kaizencoder.stackoverflowbrowser.model.Question
 import com.kaizencoder.stackoverflowbrowser.ui.QuestionListViewModel
 import com.kaizencoder.stackoverflowbrowser.utils.DateFormatter
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionListScreen(
     onNavigateToDetailScreen: (Int) -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: QuestionListViewModel = hiltViewModel()
 ) {
-    val questions = viewModel.questions.collectAsLazyPagingItems()
 
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(questions.itemCount) { index ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(R.string.app_name)) }
+            )
+        },
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        val questions = viewModel.questions.collectAsLazyPagingItems()
 
-            questions[index]?.let { question ->
-                QuestionItem(question) { questionId ->
-                    onNavigateToDetailScreen(questionId)
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(questions.itemCount) { index ->
+
+                questions[index]?.let { question ->
+                    QuestionItem(question) { questionId ->
+                        onNavigateToDetailScreen(questionId)
+                    }
                 }
             }
         }
     }
+
 
 }
 
@@ -67,7 +83,7 @@ fun QuestionItem(question: Question, onItemClick: (Int) -> Unit) {
             text = question.title,
             modifier = Modifier.padding(top = 12.dp, start = 12.dp)
         )
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp, end = 12.dp, bottom = 12.dp),
@@ -76,15 +92,17 @@ fun QuestionItem(question: Question, onItemClick: (Int) -> Unit) {
             question.creation_date?.let { date ->
                 val annotatedString = buildAnnotatedString {
                     append("asked on ")
-                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary)){
-                        append(DateFormatter.convertTimestampToFormattedDate(
-                            date
-                        ))
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.tertiary)) {
+                        append(
+                            DateFormatter.convertTimestampToFormattedDate(
+                                date
+                            )
+                        )
                     }
                 }
                 Text(
                     text = annotatedString
-                    )
+                )
             }
             val ownerName = buildAnnotatedString {
                 append(" by ")

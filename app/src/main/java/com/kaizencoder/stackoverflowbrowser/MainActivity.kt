@@ -30,28 +30,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StackOverflowBrowserTheme {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = { Text(text = stringResource(R.string.app_name)) }
-                        )
-                    },
-                    modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val navController = rememberNavController()
+                val navController = rememberNavController()
 
-                    NavHost(navController, startDestination = Route.ListScreen){
-                        composable<Route.ListScreen> {
-                            QuestionListScreen(onNavigateToDetailScreen = { id ->
-                                navController.navigate(route = Route.DetailScreen(id))
-                            },
-                                Modifier.padding(innerPadding))
-                        }
-                        composable<Route.DetailScreen> { backStackEntry ->
-                            val details: Route.DetailScreen = backStackEntry.toRoute()
-                            QuestionDetailScreen(details.questionId, Modifier.padding(innerPadding))
-                        }
+                NavHost(navController, startDestination = Route.ListScreen){
+                    composable<Route.ListScreen> {
+                        QuestionListScreen(onNavigateToDetailScreen = { id ->
+                            navController.navigate(route = Route.DetailScreen(id))
+                        })
+                    }
+                    composable<Route.DetailScreen> { backStackEntry ->
+                        val details: Route.DetailScreen = backStackEntry.toRoute()
+                        QuestionDetailScreen(details.questionId)
                     }
                 }
+
+
             }
         }
     }
